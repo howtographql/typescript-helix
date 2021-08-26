@@ -5,8 +5,9 @@ import {
   Request,
   renderGraphiQL,
 } from "graphql-helix";
-import { schema } from "./schema";
+import { APP_SECRET, schema } from "./schema";
 import { PrismaClient } from "@prisma/client";
+import { JwtPayload, verify } from "jsonwebtoken";
 
 async function main() {
   const server = fastify();
@@ -34,7 +35,21 @@ async function main() {
     const result = await processRequest({
       request,
       schema,
-      contextFactory: () => ({ prisma }),
+      contextFactory: () => {
+        let currentUser = null;
+
+        if (req.headers.authorization) {
+          const token = req.headers.authorization.split(" ")[1];
+          const tokenPayload = verify(token, APP_SECRET) as JwtPayload;
+          const userId = tokenPayload.userId;
+          currentUser = prisma.user.findUnique({ where: { id: userId } });
+        }
+
+        return {
+          prisma,
+          currentUser,
+        };
+      },
       operationName,
       query,
       variables,
