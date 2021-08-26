@@ -2,7 +2,14 @@ import { makeExecutableSchema } from "@graphql-tools/schema";
 
 const typeDefs = `
   type Query {
-    info: String
+    info: String!
+    feed: [Link!]!
+  }
+
+  type Link {
+    id: ID!
+    description: String!
+    url: String!
   }
 `;
 
