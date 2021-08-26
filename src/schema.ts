@@ -9,6 +9,7 @@ const typeDefs = `
   type Query {
     info: String!
     feed: [Link!]!
+    me: User!
   }
 
   type Mutation {
@@ -42,6 +43,13 @@ const resolvers = {
     info: () => `This is the API of a Hackernews Clone`,
     feed: async (parent: unknown, args: unknown, context: GraphQLContext) => {
       return context.prisma.link.findMany();
+    },
+    me: (parent: unknown, args: unknown, context: GraphQLContext) => {
+      if (context.currentUser === null) {
+        throw new Error("Unauthenticated!");
+      }
+
+      return context.currentUser;
     },
   },
   Mutation: {
