@@ -9,8 +9,13 @@ export const APP_SECRET = "this is my secret";
 const typeDefs = `
   type Query {
     info: String!
-    feed(filter: String, skip: Int, take: Int, orderBy: LinkOrderByInput): [Link!]!
+    feed(filter: String, skip: Int, take: Int, orderBy: LinkOrderByInput): Feed!
     me: User!
+  }
+
+  type Feed {
+    links: [Link!]!
+    count: Int!
   }
 
   type Mutation {
@@ -76,12 +81,18 @@ const resolvers = {
           }
         : {};
 
-      return context.prisma.link.findMany({
+      const totalCount = await context.prisma.link.count({ where });
+      const links = await context.prisma.link.findMany({
         where,
         skip: args.skip,
         take: args.take,
         orderBy: args.orderBy,
       });
+
+      return {
+        count: totalCount,
+        links,
+      };
     },
     me: (parent: unknown, args: unknown, context: GraphQLContext) => {
       if (context.currentUser === null) {
