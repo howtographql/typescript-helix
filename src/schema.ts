@@ -9,7 +9,7 @@ export const APP_SECRET = "this is my secret";
 const typeDefs = `
   type Query {
     info: String!
-    feed: [Link!]!
+    feed(filter: String): [Link!]!
     me: User!
   }
 
@@ -42,8 +42,21 @@ const typeDefs = `
 const resolvers = {
   Query: {
     info: () => `This is the API of a Hackernews Clone`,
-    feed: async (parent: unknown, args: unknown, context: GraphQLContext) => {
-      return context.prisma.link.findMany();
+    feed: async (
+      parent: unknown,
+      args: { filter?: string },
+      context: GraphQLContext
+    ) => {
+      const where = args.filter
+        ? {
+            OR: [
+              { description: { contains: args.filter } },
+              { url: { contains: args.filter } },
+            ],
+          }
+        : {};
+
+      return context.prisma.link.findMany({ where });
     },
     me: (parent: unknown, args: unknown, context: GraphQLContext) => {
       if (context.currentUser === null) {
