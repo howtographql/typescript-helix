@@ -17,6 +17,7 @@ const typeDefs = `
     id: ID!
     description: String!
     url: String!
+    postedBy: User
   }
 
   type AuthPayload {
