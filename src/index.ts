@@ -1,9 +1,23 @@
 import fastify from "fastify";
-import { getGraphQLParameters, processRequest, Request } from "graphql-helix";
+import {
+  getGraphQLParameters,
+  processRequest,
+  Request,
+  renderGraphiQL,
+} from "graphql-helix";
 import { schema } from "./schema";
 
 async function main() {
   const server = fastify();
+
+  server.get("/graphql", (req, reply) => {
+    reply.header("Content-Type", "text/html");
+    reply.send(
+      renderGraphiQL({
+        endpoint: "/graphql",
+      })
+    );
+  });
 
   server.post("/graphql", async (req, reply) => {
     const request: Request = {
