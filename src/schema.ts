@@ -2,14 +2,14 @@ import { makeExecutableSchema } from "@graphql-tools/schema";
 import { GraphQLContext } from "./context";
 import { hash, compare } from "bcryptjs";
 import { sign } from "jsonwebtoken";
-import { User, Link } from "@prisma/client";
+import { User, Link, Prisma } from "@prisma/client";
 
 export const APP_SECRET = "this is my secret";
 
 const typeDefs = `
   type Query {
     info: String!
-    feed(filter: String, skip: Int, take: Int): [Link!]!
+    feed(filter: String, skip: Int, take: Int, orderBy: LinkOrderByInput): [Link!]!
     me: User!
   }
 
@@ -37,6 +37,17 @@ const typeDefs = `
     email: String!
     links: [Link!]!
   }
+
+  input LinkOrderByInput {
+    description: Sort
+    url: Sort
+    createdAt: Sort
+  }
+  
+  enum Sort {
+    asc
+    desc
+  }
 `;
 
 const resolvers = {
@@ -44,7 +55,16 @@ const resolvers = {
     info: () => `This is the API of a Hackernews Clone`,
     feed: async (
       parent: unknown,
-      args: { filter?: string; skip?: number; take?: number },
+      args: {
+        filter?: string;
+        skip?: number;
+        take?: number;
+        orderBy?: {
+          description?: Prisma.SortOrder;
+          url?: Prisma.SortOrder;
+          createdAt?: Prisma.SortOrder;
+        };
+      },
       context: GraphQLContext
     ) => {
       const where = args.filter
@@ -60,6 +80,7 @@ const resolvers = {
         where,
         skip: args.skip,
         take: args.take,
+        orderBy: args.orderBy,
       });
     },
     me: (parent: unknown, args: unknown, context: GraphQLContext) => {
