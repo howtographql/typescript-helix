@@ -6,9 +6,11 @@ import {
   renderGraphiQL,
 } from "graphql-helix";
 import { schema } from "./schema";
+import { PrismaClient } from "@prisma/client";
 
 async function main() {
   const server = fastify();
+  const prisma = new PrismaClient();
 
   server.get("/graphql", (req, reply) => {
     reply.header("Content-Type", "text/html");
@@ -32,6 +34,7 @@ async function main() {
     const result = await processRequest({
       request,
       schema,
+      contextFactory: () => ({ prisma }),
       operationName,
       query,
       variables,
