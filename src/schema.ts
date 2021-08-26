@@ -18,6 +18,18 @@ const typeDefs = `
     description: String!
     url: String!
   }
+
+  type AuthPayload {
+    token: String
+    user: User
+  }
+  
+  type User {
+    id: ID!
+    name: String!
+    email: String!
+    links: [Link!]!
+  }
 `;
 
 const resolvers = {
