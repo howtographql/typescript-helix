@@ -2,6 +2,7 @@ import { makeExecutableSchema } from "@graphql-tools/schema";
 import { GraphQLContext } from "./context";
 import { hash, compare } from "bcryptjs";
 import { sign } from "jsonwebtoken";
+import { Link } from "@prisma/client";
 
 export const APP_SECRET = "this is my secret";
 
@@ -112,6 +113,17 @@ const resolvers = {
         token,
         user,
       };
+    },
+  },
+  Link: {
+    postedBy: async (parent: Link, args: unknown, context: GraphQLContext) => {
+      if (!parent.postedById) {
+        return null;
+      }
+
+      return context.prisma.link
+        .findUnique({ where: { id: parent.id } })
+        .postedBy();
     },
   },
 };
