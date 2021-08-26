@@ -1,6 +1,6 @@
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { GraphQLContext } from "./context";
-import { hash } from "bcryptjs";
+import { hash, compare } from "bcryptjs";
 import { sign } from "jsonwebtoken";
 
 export const APP_SECRET = "this is my secret";
@@ -67,6 +67,32 @@ const resolvers = {
       const user = await context.prisma.user.create({
         data: { ...args, password },
       });
+      const token = sign({ userId: user.id }, APP_SECRET);
+
+      return {
+        token,
+        user,
+      };
+    },
+    login: async (
+      parent: unknown,
+      args: { email: string; password: string },
+      context: GraphQLContext
+    ) => {
+      const user = await context.prisma.user.findUnique({
+        where: { email: args.email },
+      });
+
+      if (!user) {
+        throw new Error("No such user found");
+      }
+
+      const valid = await compare(args.password, user.password);
+
+      if (!valid) {
+        throw new Error("Invalid password");
+      }
+
       const token = sign({ userId: user.id }, APP_SECRET);
 
       return {
