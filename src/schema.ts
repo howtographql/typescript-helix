@@ -2,6 +2,9 @@ import { makeExecutableSchema } from "@graphql-tools/schema";
 import { GraphQLContext } from "./context";
 import typeDefs from "./schema.graphql";
 import { Link } from "@prisma/client";
+import { APP_SECRET } from "./auth";
+import { hash } from "bcryptjs";
+import { sign } from "jsonwebtoken";
 
 const resolvers = {
   Query: {
@@ -28,6 +31,24 @@ const resolvers = {
         },
       });
       return newLink;
+    },
+    signup: async (
+      parent: unknown,
+      args: { email: string; password: string; name: string },
+      context: GraphQLContext
+    ) => {
+      const password = await hash(args.password, 10);
+
+      const user = await context.prisma.user.create({
+        data: { ...args, password },
+      });
+
+      const token = sign({ userId: user.id }, APP_SECRET);
+
+      return {
+        token,
+        user,
+      };
     },
   },
 };
