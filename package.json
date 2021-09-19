@@ -29,8 +29,10 @@
   },
   "dependencies": {
     "@graphql-tools/schema": "^8.2.0",
+    "bcryptjs": "^2.4.3",
     "fastify": "^3.21.3",
     "graphql": "^15.5.3",
-    "graphql-helix": "^1.7.0"
+    "graphql-helix": "^1.7.0",
+    "jsonwebtoken": "^8.5.1"
   }
 }
