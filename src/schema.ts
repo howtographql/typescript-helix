@@ -31,12 +31,18 @@ const resolvers = {
       args: { description: string; url: string },
       context: GraphQLContext
     ) => {
+      if (context.currentUser === null) {
+        throw new Error("Unauthenticated!");
+      }
+
       const newLink = await context.prisma.link.create({
         data: {
           url: args.url,
           description: args.description,
+          postedBy: { connect: { id: context.currentUser.id } },
         },
       });
+
       return newLink;
     },
     signup: async (
