@@ -20,6 +20,8 @@
   "homepage": "https://github.com/dotansimha/graphql-typescript-node-tutorial#readme",
   "devDependencies": {
     "@prisma/client": "^3.0.2",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/jsonwebtoken": "^8.5.5",
     "@types/node": "^16.9.2",
     "graphql-import-node": "^0.0.4",
     "prisma": "^3.0.2",
