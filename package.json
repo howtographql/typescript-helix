@@ -28,6 +28,7 @@
     "@graphql-tools/schema": "^8.2.0",
     "fastify": "^3.21.3",
     "graphql": "^15.5.3",
-    "graphql-import-node": "^0.0.4"
+    "graphql-import-node": "^0.0.4",
+    "graphql-helix": "^1.8.2"
   }
 }
