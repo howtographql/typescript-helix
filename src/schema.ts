@@ -160,6 +160,14 @@ const resolvers = {
         return payload.createdLink;
       },
     },
+    newVote: {
+      subscribe: (parent: unknown, args: {}, context: GraphQLContext) => {
+        return context.pubSub.asyncIterator("newVote");
+      },
+      resolve: (payload: PubSubChannels["newVote"][0]) => {
+        return payload.createdVote;
+      },
+    },
   },
 };
 
