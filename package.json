@@ -35,6 +35,8 @@
     "graphql": "^15.5.3",
     "graphql-import-node": "^0.0.4",
     "graphql-helix": "^1.8.2",
-    "jsonwebtoken": "^8.5.1"
+    "graphql-subscriptions": "^1.2.1",
+    "jsonwebtoken": "^8.5.1",
+    "typed-graphql-subscriptions": "^0.0.1"
   }
 }
