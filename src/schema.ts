@@ -29,6 +29,8 @@ const resolvers = {
     id: (parent: Link) => parent.id,
     description: (parent: Link) => parent.description,
     url: (parent: Link) => parent.url,
+    votes: (parent: Link, args: {}, context: GraphQLContext) =>
+      context.prisma.link.findUnique({ where: { id: parent.id } }).votes(),
     postedBy: async (parent: Link, args: {}, context: GraphQLContext) => {
       if (!parent.postedById) {
         return null;
