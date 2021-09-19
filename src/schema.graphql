@@ -1,6 +1,7 @@
 type Query {
   info: String!
   feed: [Link!]!
+  me: User!
 }
 
 type Mutation {
