@@ -25,6 +25,21 @@ const resolvers = {
     description: (parent: Link) => parent.description,
     url: (parent: Link) => parent.url,
   },
+  Mutation: {
+    post: (parent: unknown, args: { description: string; url: string }) => {
+      let idCount = links.length;
+
+      const link: Link = {
+        id: `link-${idCount++}`,
+        description: args.description,
+        url: args.url,
+      };
+
+      links.push(link);
+
+      return link;
+    },
+  },
 };
 
 export const schema = makeExecutableSchema({
