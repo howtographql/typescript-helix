@@ -10,8 +10,21 @@ import { PubSubChannels } from "./pubsub";
 const resolvers = {
   Query: {
     info: () => `This is the API of a Hackernews Clone`,
-    feed: async (parent: unknown, args: {}, context: GraphQLContext) => {
-      return context.prisma.link.findMany();
+    feed: async (
+      parent: unknown,
+      args: { filter?: string },
+      context: GraphQLContext
+    ) => {
+      const where = args.filter
+        ? {
+            OR: [
+              { description: { contains: args.filter } },
+              { url: { contains: args.filter } },
+            ],
+          }
+        : {};
+
+      return context.prisma.link.findMany({ where });
     },
     me: (parent: unknown, args: {}, context: GraphQLContext) => {
       if (context.currentUser === null) {
