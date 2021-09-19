@@ -19,8 +19,10 @@
   },
   "homepage": "https://github.com/dotansimha/graphql-typescript-node-tutorial#readme",
   "devDependencies": {
+    "@prisma/client": "^3.0.2",
     "@types/node": "^16.9.2",
     "graphql-import-node": "^0.0.4",
+    "prisma": "^3.0.2",
     "ts-node": "^10.2.1",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.4.3"
