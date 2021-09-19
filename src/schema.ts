@@ -25,6 +25,12 @@ const resolvers = {
     links: (parent: User, args: {}, context: GraphQLContext) =>
       context.prisma.user.findUnique({ where: { id: parent.id } }).links(),
   },
+  Vote: {
+    link: (parent: User, args: {}, context: GraphQLContext) =>
+      context.prisma.vote.findUnique({ where: { id: parent.id } }).link(),
+    user: (parent: User, args: {}, context: GraphQLContext) =>
+      context.prisma.vote.findUnique({ where: { id: parent.id } }).user(),
+  },
   Link: {
     id: (parent: Link) => parent.id,
     description: (parent: Link) => parent.description,
