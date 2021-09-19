@@ -57,6 +57,8 @@ const resolvers = {
         },
       });
 
+      context.pubSub.publish("newLink", { createdLink: newLink });
+
       return newLink;
     },
     signup: async (
