@@ -12,6 +12,13 @@ const resolvers = {
     feed: async (parent: unknown, args: {}, context: GraphQLContext) => {
       return context.prisma.link.findMany();
     },
+    me: (parent: unknown, args: {}, context: GraphQLContext) => {
+      if (context.currentUser === null) {
+        throw new Error("Unauthenticated!");
+      }
+
+      return context.currentUser;
+    },
   },
   Link: {
     id: (parent: Link) => parent.id,
