@@ -23,5 +23,10 @@
     "ts-node": "^10.2.1",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.4.3"
+  },
+  "dependencies": {
+    "@graphql-tools/schema": "^8.2.0",
+    "graphql": "^15.5.3",
+    "graphql-import-node": "^0.0.4"
   }
 }
