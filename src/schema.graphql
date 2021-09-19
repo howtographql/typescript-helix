@@ -11,6 +11,12 @@ type Mutation {
   vote(linkId: ID!): Vote
 }
 
+type Vote {
+  id: ID!
+  link: Link!
+  user: User!
+}
+
 type Link {
   id: ID!
   description: String!
