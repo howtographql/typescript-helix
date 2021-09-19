@@ -24,6 +24,15 @@ const resolvers = {
     id: (parent: Link) => parent.id,
     description: (parent: Link) => parent.description,
     url: (parent: Link) => parent.url,
+    postedBy: async (parent: Link, args: {}, context: GraphQLContext) => {
+      if (!parent.postedById) {
+        return null;
+      }
+
+      return context.prisma.link
+        .findUnique({ where: { id: parent.id } })
+        .postedBy();
+    },
   },
   Mutation: {
     post: async (
