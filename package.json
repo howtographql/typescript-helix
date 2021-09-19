@@ -16,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/dotansimha/graphql-typescript-node-tutorial/issues"
   },
-  "homepage": "https://github.com/dotansimha/graphql-typescript-node-tutorial#readme"
+  "homepage": "https://github.com/dotansimha/graphql-typescript-node-tutorial#readme",
+  "devDependencies": {
+    "@types/node": "^16.9.2",
+    "ts-node": "^10.2.1",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.4.3"
+  }
 }
