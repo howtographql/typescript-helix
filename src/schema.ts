@@ -103,6 +103,45 @@ const resolvers = {
         user,
       };
     },
+    vote: async (
+      parent: unknown,
+      args: { linkId: string },
+      context: GraphQLContext
+    ) => {
+      // 1
+      if (!context.currentUser) {
+        throw new Error("You must login in order to use upvote!");
+      }
+
+      // 2
+      const userId = context.currentUser.id;
+
+      // 3
+      const vote = await context.prisma.vote.findUnique({
+        where: {
+          linkId_userId: {
+            linkId: Number(args.linkId),
+            userId: userId,
+          },
+        },
+      });
+
+      if (vote !== null) {
+        throw new Error(`Already voted for link: ${args.linkId}`);
+      }
+
+      // 4
+      const newVote = await context.prisma.vote.create({
+        data: {
+          user: { connect: { id: userId } },
+          link: { connect: { id: Number(args.linkId) } },
+        },
+      });
+
+      context.pubSub.publish("newVote", { createdVote: newVote });
+
+      return newVote;
+    },
   },
   Subscription: {
     newLink: {
