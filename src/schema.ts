@@ -33,12 +33,18 @@ const resolvers = {
           }
         : {};
 
-      return context.prisma.link.findMany({
+      const totalCount = await context.prisma.link.count({ where });
+      const links = await context.prisma.link.findMany({
         where,
         skip: args.skip,
         take: args.take,
         orderBy: args.orderBy,
       });
+
+      return {
+        count: totalCount,
+        links,
+      };
     },
     me: (parent: unknown, args: {}, context: GraphQLContext) => {
       if (context.currentUser === null) {
