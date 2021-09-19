@@ -48,8 +48,21 @@ async function main() {
 
       if (result.type === "RESPONSE") {
         reply.send(result.payload);
-      } else {
-        reply.send({ error: "Stream not supported at the moment" });
+      } else if (result.type === "PUSH") {
+        reply.raw.setHeader("Content-Type", "text/event-stream");
+        reply.raw.setHeader("Connection", "keep-alive");
+        reply.raw.setHeader("Cache-Control", "no-cache,no-transform");
+        reply.raw.setHeader("x-no-compression", 1);
+
+        // If the request is closed by the client, we unsubscribe and stop executing the request
+        req.raw.on("close", () => {
+          result.unsubscribe();
+        });
+
+        // We subscribe to the event stream and push any new events to the client
+        await result.subscribe((result) => {
+          reply.raw.write(`data: ${JSON.stringify(result)}\n\n`);
+        });
       }
     },
   });
