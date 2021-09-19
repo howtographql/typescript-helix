@@ -1,16 +1,14 @@
 import "graphql-import-node";
-import { execute, parse } from "graphql";
-import { schema } from "./schema";
+import fastify from "fastify";
 
 async function main() {
-  const myQuery = parse(`query { info }`);
+  const server = fastify();
 
-  const result = await execute({
-    schema,
-    document: myQuery,
+  server.get("/", (req, reply) => {
+    reply.send({ test: true });
   });
 
-  console.log(result);
+  server.listen(3000, "0.0.0.0");
 }
 
 main();
