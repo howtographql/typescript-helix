@@ -1,7 +1,7 @@
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { GraphQLContext } from "./context";
 import typeDefs from "./schema.graphql";
-import { Link } from "@prisma/client";
+import { Link, User } from "@prisma/client";
 import { APP_SECRET } from "./auth";
 import { hash, compare } from "bcryptjs";
 import { sign } from "jsonwebtoken";
@@ -19,6 +19,10 @@ const resolvers = {
 
       return context.currentUser;
     },
+  },
+  User: {
+    links: (parent: User, args: {}, context: GraphQLContext) =>
+      context.prisma.user.findUnique({ where: { id: parent.id } }).links(),
   },
   Link: {
     id: (parent: Link) => parent.id,
