@@ -1,7 +1,7 @@
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { GraphQLContext } from "./context";
 import typeDefs from "./schema.graphql";
-import { Link, User } from "@prisma/client";
+import { Link, User, Prisma } from "@prisma/client";
 import { APP_SECRET } from "./auth";
 import { hash, compare } from "bcryptjs";
 import { sign } from "jsonwebtoken";
@@ -12,7 +12,16 @@ const resolvers = {
     info: () => `This is the API of a Hackernews Clone`,
     feed: async (
       parent: unknown,
-      args: { filter?: string; skip?: number; take?: number },
+      args: {
+        filter?: string;
+        skip?: number;
+        take?: number;
+        orderBy?: {
+          description?: Prisma.SortOrder;
+          url?: Prisma.SortOrder;
+          createdAt?: Prisma.SortOrder;
+        };
+      },
       context: GraphQLContext
     ) => {
       const where = args.filter
@@ -28,6 +37,7 @@ const resolvers = {
         where,
         skip: args.skip,
         take: args.take,
+        orderBy: args.orderBy,
       });
     },
     me: (parent: unknown, args: {}, context: GraphQLContext) => {
